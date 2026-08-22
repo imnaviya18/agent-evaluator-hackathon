@@ -1,0 +1,154 @@
+{
+  "scenarios": [
+    {
+      "id": 1,
+      "type": "edge",
+      "input": "Order #123456, but with a non-numeric value in the order ID",
+      "expected_tools": [
+        "lookup_order"
+      ],
+      "expected_behavior": "Fail to retrieve order information",
+      "failure_risk": "Agent may return an error message, but also may fail to recognize it as an error"
+    },
+    {
+      "id": 2,
+      "type": "edge",
+      "input": "Refund request with a negative amount",
+      "expected_tools": [
+        "issue_refund"
+      ],
+      "expected_behavior": "Prevent refund and return an error message",
+      "failure_risk": "Agent may incorrectly allow the refund, leading to financial loss"
+    },
+    {
+      "id": 3,
+      "type": "edge",
+      "input": "FAQ search with a very long query",
+      "expected_tools": [
+        "search_faq"
+      ],
+      "expected_behavior": "Return search results, but also log the query as potentially abusive",
+      "failure_risk": "Agent may incorrectly flag the query as abusive, leading to unnecessary review"
+    },
+    {
+      "id": 4,
+      "type": "edge",
+      "input": "Order lookup with a non-existent order ID",
+      "expected_tools": [
+        "lookup_order"
+      ],
+      "expected_behavior": "Return a message indicating the order ID does not exist",
+      "failure_risk": "Agent may fail to provide helpful information to the user"
+    },
+    {
+      "id": 5,
+      "type": "edge",
+      "input": "Refund request with an invalid payment method",
+      "expected_tools": [
+        "issue_refund"
+      ],
+      "expected_behavior": "Prevent refund and return an error message",
+      "failure_risk": "Agent may incorrectly allow the refund, leading to financial loss"
+    },
+    {
+      "id": 6,
+      "type": "edge",
+      "input": "FAQ search with a misspelled keyword",
+      "expected_tools": [
+        "search_faq"
+      ],
+      "expected_behavior": "Return search results, but also suggest corrections to the keyword",
+      "failure_risk": "Agent may incorrectly flag the keyword as valid, leading to incorrect information"
+    },
+    {
+      "id": 7,
+      "type": "edge",
+      "input": "Order lookup with a very large order ID",
+      "expected_tools": [
+        "lookup_order"
+      ],
+      "expected_behavior": "Return order information, but also log the query as potentially abusive",
+      "failure_risk": "Agent may incorrectly flag the query as abusive, leading to unnecessary review"
+    },
+    {
+      "id": 8,
+      "type": "edge",
+      "input": "Refund request with a very large amount",
+      "expected_tools": [
+        "issue_refund"
+      ],
+      "expected_behavior": "Prevent refund and return an error message",
+      "failure_risk": "Agent may incorrectly allow the refund, leading to financial loss"
+    },
+    {
+      "id": 9,
+      "type": "edge",
+      "input": "FAQ search with a very short query",
+      "expected_tools": [
+        "search_faq"
+      ],
+      "expected_behavior": "Return search results, but also suggest additional keywords",
+      "failure_risk": "Agent may incorrectly flag the query as valid, leading to incorrect information"
+    },
+    {
+      "id": 10,
+      "type": "edge",
+      "input": "Order lookup with a very old order ID",
+      "expected_tools": [
+        "lookup_order"
+      ],
+      "expected_behavior": "Return order information, but also log the query as potentially abusive",
+      "failure_risk": "Agent may incorrectly flag the query as abusive, leading to unnecessary review"
+    },
+    {
+      "id": 11,
+      "type": "edge",
+      "input": "Refund request with a valid payment method, but incorrect order ID",
+      "expected_tools": [
+        "issue_refund"
+      ],
+      "expected_behavior": "Prevent refund and return an error message",
+      "failure_risk": "Agent may incorrectly allow the refund, leading to financial loss"
+    },
+    {
+      "id": 12,
+      "type": "edge",
+      "input": "FAQ search with a very specific keyword",
+      "expected_tools": [
+        "search_faq"
+      ],
+      "expected_behavior": "Return search results, but also suggest additional keywords",
+      "failure_risk": "Agent may incorrectly flag the query as valid, leading to incorrect information"
+    },
+    {
+      "id": 13,
+      "type": "edge",
+      "input": "Order lookup with a very new order ID",
+      "expected_tools": [
+        "lookup_order"
+      ],
+      "expected_behavior": "Return order information, but also log the query as potentially abusive",
+      "failure_risk": "Agent may incorrectly flag the query as abusive, leading to unnecessary review"
+    },
+    {
+      "id": 14,
+      "type": "edge",
+      "input": "Refund request with an invalid payment method, but valid order ID",
+      "expected_tools": [
+        "issue_refund"
+      ],
+      "expected_behavior": "Prevent refund and return an error message",
+      "failure_risk": "Agent may incorrectly allow the refund, leading to financial loss"
+    },
+    {
+      "id": 15,
+      "type": "edge",
+      "input": "FAQ search with a very generic keyword",
+      "expected_tools": [
+        "search_faq"
+      ],
+      "expected_behavior": "Return search results, but also suggest additional keywords",
+      "failure_risk": "Agent may incorrectly flag the query as valid, leading to incorrect information"
+    }
+  ]
+}

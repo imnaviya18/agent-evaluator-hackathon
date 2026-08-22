@@ -1,0 +1,87 @@
+{
+  "agent_description": "A customer support agent that can look up orders, issue refunds, and answer FAQs.",
+  "generated_at": "20260822_003628",
+  "scenarios": [
+    {
+      "id": "scenario_001",
+      "name": "Order Lookup",
+      "description": "The customer support agent should be able to look up an order by order number.",
+      "expected_behavior": "The agent should display the order details when given a valid order number.",
+      "tools_to_use": [
+        "lookup_order"
+      ]
+    },
+    {
+      "id": "scenario_002",
+      "name": "Refund Request",
+      "description": "A customer requests a refund for a defective product. The agent should issue a refund.",
+      "expected_behavior": "The agent should issue a refund and provide a confirmation to the customer.",
+      "tools_to_use": [
+        "issue_refund"
+      ]
+    },
+    {
+      "id": "scenario_003",
+      "name": "Frequently Asked Questions",
+      "description": "A customer asks a question about the return policy. The agent should be able to find the answer in the FAQs.",
+      "expected_behavior": "The agent should display the relevant FAQ and provide additional information if necessary.",
+      "tools_to_use": [
+        "search_faq"
+      ]
+    },
+    {
+      "id": "scenario_004",
+      "name": "Invalid Order Number",
+      "description": "The customer provides an invalid order number. The agent should handle this situation gracefully.",
+      "expected_behavior": "The agent should inform the customer that the order number is invalid and provide assistance.",
+      "tools_to_use": [
+        "lookup_order"
+      ]
+    },
+    {
+      "id": "scenario_005",
+      "name": "Partial Refund",
+      "description": "A customer requests a partial refund for a returned product. The agent should issue a partial refund.",
+      "expected_behavior": "The agent should issue a partial refund and provide a confirmation to the customer.",
+      "tools_to_use": [
+        "issue_refund"
+      ]
+    },
+    {
+      "id": "scenario_006",
+      "name": "FAQ Search Failure",
+      "description": "The FAQ search tool is temporarily unavailable. The agent should handle this situation and provide a workaround.",
+      "expected_behavior": "The agent should inform the customer that the FAQ search is unavailable and provide a manual lookup option.",
+      "tools_to_use": [
+        "search_faq"
+      ]
+    },
+    {
+      "id": "scenario_007",
+      "name": "Multiple Order Requests",
+      "description": "A customer requests to look up multiple orders at once. The agent should be able to handle this scenario.",
+      "expected_behavior": "The agent should display the order details for each order number provided.",
+      "tools_to_use": [
+        "lookup_order"
+      ]
+    },
+    {
+      "id": "scenario_008",
+      "name": "Refund Timing",
+      "description": "A customer asks about the timing of a refund. The agent should provide clear information about the refund process.",
+      "expected_behavior": "The agent should inform the customer about the typical refund processing time and provide additional resources if needed.",
+      "tools_to_use": [
+        "issue_refund"
+      ]
+    },
+    {
+      "id": "scenario_009",
+      "name": "Missing Order Details",
+      "description": "The order details are missing for a specific order. The agent should handle this situation and provide a solution.",
+      "expected_behavior": "The agent should inform the customer that the order details are missing and provide a manual lookup option.",
+      "tools_to_use": [
+        "lookup_order"
+      ]
+    }
+  ]
+}

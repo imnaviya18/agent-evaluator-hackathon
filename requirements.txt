@@ -1,0 +1,8 @@
+fastapi
+uvicorn
+ollama
+pydantic
+python-dotenv
+streamlit
+plotly
+pandas

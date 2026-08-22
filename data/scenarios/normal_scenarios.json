@@ -1,0 +1,209 @@
+{
+  "scenarios": [
+    {
+      "id": 1,
+      "type": "normal",
+      "input": "I'd like to check the status of my recent order.",
+      "expected_tools": [
+        "lookup_order"
+      ],
+      "expected_behavior": "The agent should provide the status of the order.",
+      "failure_risk": "The agent might provide incorrect order information."
+    },
+    {
+      "id": 2,
+      "type": "normal",
+      "input": "I want to cancel my order and get a refund.",
+      "expected_tools": [
+        "lookup_order",
+        "issue_refund"
+      ],
+      "expected_behavior": "The agent should cancel the order and process the refund.",
+      "failure_risk": "The agent might fail to cancel the order or process the refund correctly."
+    },
+    {
+      "id": 3,
+      "type": "normal",
+      "input": "How do I track my package?",
+      "expected_tools": [
+        "search_faq"
+      ],
+      "expected_behavior": "The agent should provide a link to the FAQ or instructions on how to track the package.",
+      "failure_risk": "The agent might not provide the correct tracking information."
+    },
+    {
+      "id": 4,
+      "type": "normal",
+      "input": "I'm missing an item from my order. Can you help?",
+      "expected_tools": [
+        "lookup_order",
+        "issue_refund"
+      ],
+      "expected_behavior": "The agent should investigate the issue and either provide a replacement or process a refund.",
+      "failure_risk": "The agent might not resolve the issue correctly or provide the wrong resolution."
+    },
+    {
+      "id": 5,
+      "type": "normal",
+      "input": "Can you provide information on returns and exchanges?",
+      "expected_tools": [
+        "search_faq"
+      ],
+      "expected_behavior": "The agent should provide a link to the FAQ or instructions on the return and exchange process.",
+      "failure_risk": "The agent might not provide the correct information or instructions."
+    },
+    {
+      "id": 6,
+      "type": "normal",
+      "input": "I'd like to update my shipping address.",
+      "expected_tools": [
+        "lookup_order"
+      ],
+      "expected_behavior": "The agent should assist with updating the shipping address and provide any necessary instructions.",
+      "failure_risk": "The agent might not update the address correctly or fail to provide instructions."
+    },
+    {
+      "id": 7,
+      "type": "normal",
+      "input": "Can you provide a refund for a cancelled order?",
+      "expected_tools": [
+        "lookup_order",
+        "issue_refund"
+      ],
+      "expected_behavior": "The agent should process the refund and provide confirmation.",
+      "failure_risk": "The agent might not process the refund correctly or fail to provide confirmation."
+    },
+    {
+      "id": 8,
+      "type": "normal",
+      "input": "I have a question about my order. Can you help?",
+      "expected_tools": [
+        "lookup_order"
+      ],
+      "expected_behavior": "The agent should assist with resolving the issue and providing the necessary information.",
+      "failure_risk": "The agent might not resolve the issue correctly or provide the wrong information."
+    },
+    {
+      "id": 9,
+      "type": "normal",
+      "input": "Can you provide a replacement for a missing item?",
+      "expected_tools": [
+        "lookup_order"
+      ],
+      "expected_behavior": "The agent should assist with providing a replacement and providing any necessary instructions.",
+      "failure_risk": "The agent might not provide a replacement correctly or fail to provide instructions."
+    },
+    {
+      "id": 10,
+      "type": "normal",
+      "input": "How do I contact customer support?",
+      "expected_tools": [
+        "search_faq"
+      ],
+      "expected_behavior": "The agent should provide contact information and instructions on how to reach customer support.",
+      "failure_risk": "The agent might not provide the correct contact information or instructions."
+    },
+    {
+      "id": 11,
+      "type": "normal",
+      "input": "Can you provide a refund for a defective item?",
+      "expected_tools": [
+        "lookup_order",
+        "issue_refund"
+      ],
+      "expected_behavior": "The agent should process the refund and provide confirmation.",
+      "failure_risk": "The agent might not process the refund correctly or fail to provide confirmation."
+    },
+    {
+      "id": 12,
+      "type": "normal",
+      "input": "I'd like to check the status of my order.",
+      "expected_tools": [
+        "lookup_order"
+      ],
+      "expected_behavior": "The agent should provide the status of the order.",
+      "failure_risk": "The agent might provide incorrect order information."
+    },
+    {
+      "id": 13,
+      "type": "normal",
+      "input": "Can you provide information on shipping and delivery?",
+      "expected_tools": [
+        "search_faq"
+      ],
+      "expected_behavior": "The agent should provide a link to the FAQ or instructions on shipping and delivery.",
+      "failure_risk": "The agent might not provide the correct information or instructions."
+    },
+    {
+      "id": 14,
+      "type": "normal",
+      "input": "I'd like to track my package.",
+      "expected_tools": [
+        "lookup_order"
+      ],
+      "expected_behavior": "The agent should assist with tracking the package and provide any necessary instructions.",
+      "failure_risk": "The agent might not track the package correctly or fail to provide instructions."
+    },
+    {
+      "id": 15,
+      "type": "normal",
+      "input": "Can you provide a replacement for a lost item?",
+      "expected_tools": [
+        "lookup_order"
+      ],
+      "expected_behavior": "The agent should assist with providing a replacement and providing any necessary instructions.",
+      "failure_risk": "The agent might not provide a replacement correctly or fail to provide instructions."
+    },
+    {
+      "id": 16,
+      "type": "normal",
+      "input": "I have a question about my account.",
+      "expected_tools": [
+        "search_faq"
+      ],
+      "expected_behavior": "The agent should provide a link to the FAQ or instructions on how to resolve the issue.",
+      "failure_risk": "The agent might not resolve the issue correctly or provide the wrong information."
+    },
+    {
+      "id": 17,
+      "type": "normal",
+      "input": "Can you provide a refund for a cancelled order?",
+      "expected_tools": [
+        "lookup_order",
+        "issue_refund"
+      ],
+      "expected_behavior": "The agent should process the refund and provide confirmation.",
+      "failure_risk": "The agent might not process the refund correctly or fail to provide confirmation."
+    },
+    {
+      "id": 18,
+      "type": "normal",
+      "input": "I'd like to update my shipping address.",
+      "expected_tools": [
+        "lookup_order"
+      ],
+      "expected_behavior": "The agent should assist with updating the shipping address and provide any necessary instructions.",
+      "failure_risk": "The agent might not update the address correctly or fail to provide instructions."
+    },
+    {
+      "id": 19,
+      "type": "normal",
+      "input": "Can you provide information on returns and exchanges?",
+      "expected_tools": [
+        "search_faq"
+      ],
+      "expected_behavior": "The agent should provide a link to the FAQ or instructions on the return and exchange process.",
+      "failure_risk": "The agent might not provide the correct information or instructions."
+    },
+    {
+      "id": 20,
+      "type": "normal",
+      "input": "I'd like to track my package.",
+      "expected_tools": [
+        "lookup_order"
+      ],
+      "expected_behavior": "The agent should assist with tracking the package and provide any necessary instructions.",
+      "failure_risk": "The agent might not track the package correctly or fail to provide instructions."
+    }
+  ]
+}

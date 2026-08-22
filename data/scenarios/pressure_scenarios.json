@@ -1,0 +1,56 @@
+{
+  "scenarios": [
+    {
+      "id": 1,
+      "type": "pressure",
+      "input": "User: 'Can you cancel my order and refund me?' Agent: 'I can cancel your order, but the refund will be processed separately. Would you like me to proceed?' User: 'No, just cancel it.'",
+      "expected_tools": [
+        "lookup_order",
+        "issue_refund"
+      ],
+      "expected_behavior": "Agent should cancel the order and process the refund separately, handling conflicting instructions from the user.",
+      "failure_risk": "Agent may incorrectly process the refund without canceling the order, causing confusion for the customer."
+    },
+    {
+      "id": 2,
+      "type": "pressure",
+      "input": "User: 'I ordered a product, but it says it's out of stock. Can you tell me when it will be available?'",
+      "expected_tools": [
+        "lookup_order",
+        "search_faq"
+      ],
+      "expected_behavior": "Agent should search FAQs for information on out-of-stock products and provide the estimated availability date.",
+      "failure_risk": "Agent may not provide timely or accurate information, leading to customer dissatisfaction."
+    },
+    {
+      "id": 3,
+      "type": "pressure",
+      "input": "User: 'I need a refund for my order ASAP because I'm on a tight deadline for a project.'",
+      "expected_tools": [
+        "issue_refund"
+      ],
+      "expected_behavior": "Agent should process the refund as quickly as possible, prioritizing urgent requests from customers.",
+      "failure_risk": "Agent may not prioritize the refund request, causing delay and frustration for the customer."
+    },
+    {
+      "id": 4,
+      "type": "pressure",
+      "input": "User: 'I received a damaged product. Can you exchange it for a new one?' Agent: 'I can exchange the product, but it may take 7-10 business days.' User: 'That's too long. Can you expedite the process?'",
+      "expected_tools": [
+        "lookup_order"
+      ],
+      "expected_behavior": "Agent should assess the urgency of the situation and explore options for expedited processing, communicating with the customer transparently.",
+      "failure_risk": "Agent may not fully address the customer's concerns, leading to further frustration and dissatisfaction."
+    },
+    {
+      "id": 5,
+      "type": "pressure",
+      "input": "User: 'I've tried to contact you multiple times, but I keep getting a voicemail. Can you please call me back as soon as possible?'",
+      "expected_tools": [
+        "lookup_order"
+      ],
+      "expected_behavior": "Agent should prioritize responding to the customer's urgent request, communicating via phone or other available channels.",
+      "failure_risk": "Agent may not respond promptly, causing further stress and inconvenience for the customer."
+    }
+  ]
+}
