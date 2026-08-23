@@ -184,6 +184,21 @@ npm install
 npm run dev
 ```
 > Open `http://localhost:5173` in your browser.
+>
+> ⚠️ **This frontend talks to the FastAPI backend (Option D below), not the Flask backend in Option B.** It defaults to `http://localhost:8000`. If you only run Option B (Flask on port 5000), the React app's live evaluations will fail — use "Demo mode" in the UI instead, which works fully offline with no backend at all.
+
+---
+
+#### Option D: FastAPI Backend (pairs with the React frontend)
+This is a second, independent backend used by the React frontend above. It runs the same underlying sandbox/evaluation engine through a different API surface (FastAPI instead of Flask).
+
+```bash
+cd src
+uvicorn main:app --reload --port 8000 --app-dir .
+```
+> Server runs on `http://127.0.0.1:8000`. Check `http://localhost:8000/api/health` to confirm it's up.
+>
+> Run this **alongside** Option C (in a separate terminal) for the full React experience with real, live evaluations.
 
 ---
 
@@ -212,6 +227,8 @@ tests/test_storage.py ....                                               [100%]
 
 ## 🔌 API Endpoints Reference
 
+### Flask API (Option B, port 5000)
+
 | Method | Endpoint | Description |
 | :--- | :--- | :--- |
 | `GET` | `/health` | Service health status and privacy metadata. |
@@ -220,6 +237,15 @@ tests/test_storage.py ....                                               [100%]
 | `GET` | `/api/scorecard` | Aggregated reliability and security scorecards. |
 | `GET` | `/api/scenarios/presets` | List built-in benchmark test presets. |
 | `POST` | `/api/scenarios/generate` | Synthesize new adversarial or functional scenarios. |
+
+### FastAPI (Option D, port 8000 — used by the React frontend)
+
+| Method | Endpoint | Description |
+| :--- | :--- | :--- |
+| `GET` | `/api/health` | Service health status. |
+| `POST` | `/api/test` | Runs the full pipeline: generate scenarios/attacks, execute in sandbox, classify, score. |
+| `GET` | `/api/results/{test_id}` | Retrieve a single past evaluation by ID. |
+| `GET` | `/api/history` | Summary list of all past evaluations. |
 
 ---
 
@@ -236,6 +262,7 @@ tests/test_storage.py ....                                               [100%]
 
 - **Naviya** ([@imnaviya18](https://github.com/imnaviya18))
 - **akaKRISH** ([@akaKRISH](https://github.com/akaKRISH))
+- **NaitikBuilds** ([@NaitikBuilds](https://github.com/NaitikBuilds))
 
 ---
 
