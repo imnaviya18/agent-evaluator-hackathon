@@ -25,6 +25,10 @@ dev = [
     "black>=23.11.0",
 ]
 
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = [".", "src"]
+
 [tool.pyrefly]
-extraPaths = ["."]
+extraPaths = [".", "src"]
 pythonPath = ".venv/Scripts/python.exe"
