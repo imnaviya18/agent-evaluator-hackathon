@@ -2653,3 +2653,10 @@ h3 { font-weight: 540; letter-spacing: -.025em; }
 }
 .metric-outline { background: rgba(3, 3, 3, .48); backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px); }
 .panel-heading, .stream-header { background: rgba(0, 0, 0, .16); }
+
+
+/* SEQUENCED REVEAL EXPERIMENT */
+.reveal { opacity: 0; transform: translateY(24px); filter: blur(4px); transition: opacity .68s var(--ease), transform .68s var(--ease), filter .68s var(--ease); transition-delay: var(--reveal-delay, 0ms); }
+.reveal-visible { opacity: 1; transform: none; filter: none; }
+.reveal-hero { min-width: 0; }
+@media (prefers-reduced-motion: reduce) { .reveal, .reveal-visible { opacity: 1; transform: none; filter: none; transition: none; } }

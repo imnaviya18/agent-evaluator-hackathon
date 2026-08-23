@@ -5,6 +5,30 @@ const DEFAULT_API_BASE = import.meta.env.VITE_API_BASE_URL || "http://localhost:
 const DEFAULT_TOOLS = ["web_search", "code_execution", "send_email"];
 const MODEL_OPTIONS = ["llama3.1:8b", "llama3.2:3b", "mistral:7b", "qwen2.5:7b"];
 
+function Reveal({ children, className = "", delay = 0 }) {
+  const ref = useRef(null);
+  const [visible, setVisible] = useState(false);
+
+  useEffect(() => {
+    const node = ref.current;
+    if (!node) return undefined;
+    if (!("IntersectionObserver" in window)) {
+      setVisible(true);
+      return undefined;
+    }
+    const observer = new IntersectionObserver(([entry]) => {
+      if (entry.isIntersecting) {
+        setVisible(true);
+        observer.unobserve(node);
+      }
+    }, { threshold: 0.14, rootMargin: "0px 0px -8% 0px" });
+    observer.observe(node);
+    return () => observer.disconnect();
+  }, []);
+
+  return <div ref={ref} className={`reveal ${visible ? "reveal-visible" : ""} ${className}`} style={{ "--reveal-delay": `${delay}ms` }}>{children}</div>;
+}
+
 function Icon({ name, size = 18 }) {
   const paths = {
     arrow: <><path d="M5 12h14" /><path d="m12 5 7 7-7 7" /></>,
@@ -479,27 +503,27 @@ function PageHeader({ kicker, title, copy, action }) {
 
 function Overview({ latest, history, aggregate, loading, error, health, result, running, onNavigate, onOpenResult, onRefresh, onStartDemo }) {
   return <>
-    <section className="hero-panel">
+    <Reveal className="reveal-hero" delay={0}><section className="hero-panel">
       <div className="hero-copy hero-copy-floating"><span className="eyebrow red">SENTINEL / RELIABILITY ENGINE</span><h1>Make failure<br /><em>visible.</em></h1><p>Probe your agent before the real world does. Generate pressure-tested scenarios, expose unsafe decisions, and turn every response into a signal you can act on.</p><div className="hero-statline"><span><b>50+</b><small>generated probes</small></span><span><b>07</b><small>analysis layers</small></span><span><b>01</b><small>decision-ready signal</small></span></div><div className="hero-actions"><button className="button button-red" onClick={() => onNavigate("test")}>Start evaluation <Icon name="arrow" size={17} /></button><button className="button button-ghost" onClick={onStartDemo}>Launch demo mode <Icon name="spark" size={16} /></button><button className="text-button" onClick={() => document.getElementById("latest-runs")?.scrollIntoView({ behavior: "smooth" })}>View latest runs <Icon name="arrow" size={15} /></button></div><div className="hero-meta"><span>01 / OBSERVE</span><i /><span>02 / PRESSURE</span><i /><span>03 / DECIDE</span></div></div>
       <div className="hero-visual hero-orb-visual" aria-hidden="true"><div className="orbital-form"><span className="orb-loop orb-loop-one" /><span className="orb-loop orb-loop-two" /><span className="orb-loop orb-loop-three" /><span className="orb-loop orb-loop-four" /><span className="orb-core" /><span className="orb-glow" /></div><div className="orb-label orb-label-top">RELIABILITY<br /><b>ORBIT / 01</b></div><div className="orb-label orb-label-bottom">PRESSURE TESTED<br /><b>LIVE SIGNAL</b></div></div>
       <div className="hero-foot"><span>BUILT FOR PRESSURE</span><span className="foot-rule" /><span>FASTAPI / OLLAMA / JSON STORAGE</span></div>
-    </section>
-    <TelemetryStrip history={history} health={health} />
-    <div className="overview-intel"><EventStream running={running} result={result} history={history} /></div>
-    <PageHeader kicker="01 / SYSTEM READOUT" title="Reliability at a glance" copy="A live view of your evaluation history and the signals that matter most." action={<button className="button button-ghost" onClick={onRefresh}><Icon name="refresh" size={16} /> Refresh data</button>} />
-    {error && <div className="error-banner"><Icon name="warning" size={17} /><span>{error}</span><button onClick={() => onNavigate("test")}>Check connection</button></div>}
-    <section className="metric-grid">
+    </section></Reveal>
+    <Reveal delay={80}><TelemetryStrip history={history} health={health} /></Reveal>
+    <Reveal delay={150}><div className="overview-intel"><EventStream running={running} result={result} history={history} /></div></Reveal>
+    <Reveal delay={220}><PageHeader kicker="01 / SYSTEM READOUT" title="Reliability at a glance" copy="A live view of your evaluation history and the signals that matter most." action={<button className="button button-ghost" onClick={onRefresh}><Icon name="refresh" size={16} /> Refresh data</button>} /></Reveal>
+    {error && <Reveal delay={260}><div className="error-banner"><Icon name="warning" size={17} /><span>{error}</span><button onClick={() => onNavigate("test")}>Check connection</button></div></Reveal>}
+    <Reveal delay={280}><section className="metric-grid">
       <MetricCard label="Evaluations" value={aggregate.count || "—"} detail={aggregate.count ? "completed runs" : "no runs yet"} tone="white" icon="grid" />
       <MetricCard label="Avg. pass rate" value={aggregate.count ? percent(aggregate.pass) : "—"} detail={aggregate.count ? "scenario outcomes" : "run a test to measure"} tone="red" icon="check" />
       <MetricCard label="Avg. security" value={aggregate.count ? percent(aggregate.security) : "—"} detail={aggregate.count ? "attack resistance" : "adversarial coverage"} tone="dark" icon="shield" />
       <MetricCard label="Latest run" value={latest ? latest.test_id : "READY"} detail={latest ? formatDate(latest.timestamp) : "system standing by"} tone="outline" icon="pulse" />
-    </section>
-    <section className="split-grid" id="latest-runs">
+    </section></Reveal>
+    <Reveal delay={360}><section className="split-grid" id="latest-runs">
       <div className="panel runs-panel"><div className="panel-heading"><div><span className="eyebrow">RECENT ACTIVITY</span><h2>Latest evaluations</h2></div><button className="plain-link" onClick={() => onNavigate("history")}>Full history <Icon name="arrow" size={14} /></button></div>{loading ? <LoadingRows /> : history.length ? <div className="run-list">{history.slice(0, 5).map((item) => <RunRow key={item.test_id} item={item} onClick={() => onOpenResult(item.test_id)} />)}</div> : <EmptyState title="No evaluations yet" copy="Your first run will appear here with its full scorecard and audit trail." action="Open test lab" onAction={() => onNavigate("test")} />}</div>
       <div className="panel signal-panel"><div className="panel-heading"><div><span className="eyebrow">SIGNAL MAP</span><h2>What we measure</h2></div><span className="signal-status"><i /> LIVE</span></div><div className="signal-list"><Signal icon="pulse" title="Failure taxonomy" copy="Detects drift, unsafe actions, loops, and instruction violations." /><Signal icon="shield" title="Adversarial resilience" copy="Tests refusal behavior across prompt injection and social pressure." /><Signal icon="zap" title="Cost intelligence" copy="Translates test coverage into saved QA hours and dollars." /></div><div className="panel-footer"><span>SCANNER READY</span><span className="footer-dot" /><span>LOCAL-FIRST ANALYSIS</span></div></div>
-    </section>
-    <RegressionTracker history={history} />
-    <MainFooter onNavigate={onNavigate} health={health} />
+    </section></Reveal>
+    <Reveal delay={440}><RegressionTracker history={history} /></Reveal>
+    <Reveal delay={520}><MainFooter onNavigate={onNavigate} health={health} /></Reveal>
   </>;
 }
 
@@ -530,9 +554,9 @@ function LoadingRows() {
 
 function TestLab({ agentDescription, setAgentDescription, taskDomain, setTaskDomain, tools, newTool, setNewTool, addTool, removeTool, model, setModel, onSubmit, running, demoRunning, demoStep, runStatus, error, result, onNavigate, onExport, onStartDemo }) {
   return <>
-    <PageHeader kicker="02 / TEST LAB" title="Put your agent under pressure" copy="Describe the agent, declare its tools, and let the reliability engine generate the full evaluation matrix." action={<div className="test-actions"><button className="button button-ghost" onClick={onStartDemo} disabled={demoRunning}><Icon name="spark" size={15} /> {demoRunning ? "Demo running" : "Demo mode"}</button><span className="lab-status"><span className="status-ring" /> READY TO RUN</span></div>} />
-    {error && <div className="error-banner"><Icon name="warning" size={17} /><span>{error}</span></div>}
-    <div className="lab-layout">
+    <Reveal delay={0}><PageHeader kicker="02 / TEST LAB" title="Put your agent under pressure" copy="Describe the agent, declare its tools, and let the reliability engine generate the full evaluation matrix." action={<div className="test-actions"><button className="button button-ghost" onClick={onStartDemo} disabled={demoRunning}><Icon name="spark" size={15} /> {demoRunning ? "Demo running" : "Demo mode"}</button><span className="lab-status"><span className="status-ring" /> READY TO RUN</span></div>} /></Reveal>
+    {error && <Reveal delay={80}><div className="error-banner"><Icon name="warning" size={17} /><span>{error}</span></div></Reveal>}
+    <Reveal delay={140}><div className="lab-layout">
       <form className="panel lab-form" onSubmit={onSubmit}><div className="form-top"><div><span className="eyebrow">EVALUATION CONFIG</span><h2>Define the surface</h2></div><span className="form-number">01</span></div>
         <label className="field-label" htmlFor="agent-description">Agent description <span>required</span></label><textarea id="agent-description" className="text-area" rows="6" value={agentDescription} onChange={(event) => setAgentDescription(event.target.value)} placeholder="What does this agent do? What decisions can it make?" />
         <label className="field-label domain-label" htmlFor="task-domain">Task domain <span>used to sharpen generated scenarios</span></label><input id="task-domain" className="text-input" value={taskDomain} onChange={(event) => setTaskDomain(event.target.value)} placeholder="e.g. travel booking, finance, customer support" />
@@ -542,17 +566,18 @@ function TestLab({ agentDescription, setAgentDescription, taskDomain, setTaskDom
         {running && <div className="run-progress"><div className="progress-track"><span /></div><span>{runStatus}</span></div>}{demoRunning && <DemoTimeline step={demoStep} />}
       </form>
       <aside className="lab-aside"><div className="aside-card dark-card"><span className="eyebrow red">PIPELINE / 07 STEPS</span><h3>From prompt to<br /><em>proof.</em></h3><div className="pipeline">{["Scenario generation", "Attack generation", "Sandbox execution", "Failure classification", "Security classification", "Scorecard calculation", "Result persistence"].map((label, index) => <div className="pipeline-step" key={label}><span>{String(index + 1).padStart(2, "0")}</span><b>{label}</b>{index < 6 && <i />}</div>)}</div></div><div className="aside-card tip-card"><span className="eyebrow">RUNTIME NOTE</span><p>Ollama must be running and the selected model must be available before starting a full evaluation. Be specific about tools and permissions for sharper attack analysis.</p></div></aside>
-    </div>
-    {result && <ResultView result={result} onExport={onExport} onNavigate={onNavigate} />}
+    </div></Reveal>
+    {result && <Reveal delay={220}><ResultView result={result} onExport={onExport} onNavigate={onNavigate} /></Reveal>}
   </>;
 }
 
 function HistoryPage({ history, loading, error, selectedId, result, onOpen, onRefresh, onNavigate, onExport }) {
-  return <>
-    <PageHeader kicker="03 / RUN HISTORY" title="Every run leaves a trace" copy="Inspect persisted evaluations, compare outcomes, and reopen any full result payload." action={<button className="button button-ghost" onClick={onRefresh}><Icon name="refresh" size={16} /> Refresh history</button>} />
-    {error && <div className="error-banner"><Icon name="warning" size={17} /><span>{error}</span></div>}
-    <section className="history-layout history-layout-centered"><div className="panel history-panel"><div className="panel-heading"><div><span className="eyebrow">PERSISTED RESULTS</span><h2>{history.length} evaluation{history.length === 1 ? "" : "s"}</h2></div><span className="history-path">data/results/*.json</span></div>{loading ? <LoadingRows /> : history.length ? <div className="history-table"><div className="history-head"><span>AGENT / TEST ID</span><span>DATE</span><span>PASS RATE</span><span>SECURITY</span><span /></div>{history.map((item) => <button className={`history-row ${selectedId === item.test_id ? "selected" : ""}`} key={item.test_id} onClick={() => onOpen(item.test_id)}><span><strong>{item.agent_description || "Unnamed agent"}</strong><small>{item.test_id}</small></span><span>{formatDate(item.timestamp)}</span><span><b className="table-score">{percent(item.pass_rate)}</b></span><span><b className="table-score security-score">{percent(item.security_score)}</b></span><Icon name="arrow" size={15} /></button>)}</div> : <EmptyState title="History is clear" copy="Run an evaluation to persist a result and create your first audit record." action="Start an evaluation" onAction={() => onNavigate("test")} />}</div>{result ? <div className="result-preview history-detail-centered"><ResultView result={result} onExport={onExport} onNavigate={onNavigate} /> </div> : <div className="panel detail-placeholder"><div className="placeholder-lines"><i /><i /><i /></div><h3>Select a run</h3><p>Choose an evaluation from the list to inspect its scenario and attack-level findings.</p></div>}    </section>
-    <ComparisonPanel history={history} />
+    return <>
+    <Reveal delay={0}><PageHeader kicker="03 / RUN HISTORY" title="Every run leaves a trace" copy="Inspect persisted evaluations, compare outcomes, and reopen any full result payload." action={<button className="button button-ghost" onClick={onRefresh}><Icon name="refresh" size={16} /> Refresh history</button>} /></Reveal>
+    {error && <Reveal delay={80}><div className="error-banner"><Icon name="warning" size={17} /><span>{error}</span></div></Reveal>}
+    <Reveal delay={140}><section className="history-layout history-layout-centered">
+<div className="panel history-panel"><div className="panel-heading"><div><span className="eyebrow">PERSISTED RESULTS</span><h2>{history.length} evaluation{history.length === 1 ? "" : "s"}</h2></div><span className="history-path">data/results/*.json</span></div>{loading ? <LoadingRows /> : history.length ? <div className="history-table"><div className="history-head"><span>AGENT / TEST ID</span><span>DATE</span><span>PASS RATE</span><span>SECURITY</span><span /></div>{history.map((item) => <button className={`history-row ${selectedId === item.test_id ? "selected" : ""}`} key={item.test_id} onClick={() => onOpen(item.test_id)}><span><strong>{item.agent_description || "Unnamed agent"}</strong><small>{item.test_id}</small></span><span>{formatDate(item.timestamp)}</span><span><b className="table-score">{percent(item.pass_rate)}</b></span><span><b className="table-score security-score">{percent(item.security_score)}</b></span><Icon name="arrow" size={15} /></button>)}</div> : <EmptyState title="History is clear" copy="Run an evaluation to persist a result and create your first audit record." action="Start an evaluation" onAction={() => onNavigate("test")} />}</div>{result ? <div className="result-preview history-detail-centered"><ResultView result={result} onExport={onExport} onNavigate={onNavigate} /> </div> : <div className="panel detail-placeholder"><div className="placeholder-lines"><i /><i /><i /></div><h3>Select a run</h3><p>Choose an evaluation from the list to inspect its scenario and attack-level findings.</p></div>}    </section></Reveal>
+    <Reveal delay={360}><ComparisonPanel history={history} /></Reveal>
   </>;
 }
 
