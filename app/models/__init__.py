@@ -1,3 +1,13 @@
-# Import your models here so Peewee registers them.
-# Example:
-#   from app.models.product import Product
+from app.models.evaluation import (
+    AgentModel,
+    TestRunModel,
+    ScenarioResultModel,
+    ScorecardModel,
+)
+
+__all__ = [
+    "AgentModel",
+    "TestRunModel",
+    "ScenarioResultModel",
+    "ScorecardModel",
+]
