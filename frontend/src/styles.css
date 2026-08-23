@@ -2660,3 +2660,58 @@ h3 { font-weight: 540; letter-spacing: -.025em; }
 .reveal-visible { opacity: 1; transform: none; filter: none; }
 .reveal-hero { min-width: 0; }
 @media (prefers-reduced-motion: reduce) { .reveal, .reveal-visible { opacity: 1; transform: none; filter: none; transition: none; } }
+
+/* LARGER HERO ORBITAL EXPERIMENT */
+.hero-orb-visual { width: 55%; height: 610px; right: -3%; }
+.hero-orb-visual .orbital-form { width: min(52vw, 620px); }
+.hero-orb-visual .orb-core { width: 28%; }
+@media (max-width: 1100px) {
+  .hero-orb-visual { width: 53%; height: 570px; }
+  .hero-orb-visual .orbital-form { width: min(55vw, 570px); }
+}
+@media (max-width: 900px) {
+  .hero-orb-visual { width: 62%; height: 560px; right: -8%; }
+  .hero-orb-visual .orbital-form { width: min(64vw, 540px); }
+  .hero-orb-visual .orb-core { width: 27%; }
+}
+@media (max-width: 640px) {
+  .hero-orb-visual { inset: 28% -20% 0 20%; width: auto; height: auto; right: auto; }
+  .hero-orb-visual .orbital-form { width: min(92vw, 520px); }
+  .hero-orb-visual .orb-core { width: 26%; }
+}
+
+/* REFINED HERO ORBITAL SCALE */
+.hero-orb-visual { width: 52%; height: 575px; right: -2%; }
+.hero-orb-visual .orbital-form { width: min(47vw, 560px); }
+.hero-orb-visual .orb-core { width: 26%; }
+@media (max-width: 1100px) {
+  .hero-orb-visual { width: 51%; height: 540px; }
+  .hero-orb-visual .orbital-form { width: min(52vw, 520px); }
+}
+@media (max-width: 900px) {
+  .hero-orb-visual { width: 59%; height: 530px; right: -6%; }
+  .hero-orb-visual .orbital-form { width: min(60vw, 500px); }
+  .hero-orb-visual .orb-core { width: 25%; }
+}
+@media (max-width: 640px) {
+  .hero-orb-visual .orbital-form { width: min(86vw, 480px); }
+  .hero-orb-visual .orb-core { width: 25%; }
+}
+
+/* SECONDARY HERO SCALE REFINEMENT */
+.hero-orb-visual { width: 49%; height: 545px; right: -1%; }
+.hero-orb-visual .orbital-form { width: min(43vw, 510px); }
+.hero-orb-visual .orb-core { width: 24%; }
+@media (max-width: 1100px) {
+  .hero-orb-visual { width: 49%; height: 515px; }
+  .hero-orb-visual .orbital-form { width: min(49vw, 480px); }
+}
+@media (max-width: 900px) {
+  .hero-orb-visual { width: 56%; height: 505px; right: -4%; }
+  .hero-orb-visual .orbital-form { width: min(56vw, 455px); }
+  .hero-orb-visual .orb-core { width: 24%; }
+}
+@media (max-width: 640px) {
+  .hero-orb-visual .orbital-form { width: min(80vw, 440px); }
+  .hero-orb-visual .orb-core { width: 24%; }
+}
