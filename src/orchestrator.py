@@ -4,8 +4,10 @@ Generates scenarios/attacks, runs them against the agent (sandbox),
 classifies failures/security, calculates scorecards, and saves results.
 """
 
+import sys
 import uuid
 from datetime import datetime
+from pathlib import Path
 
 from scenario_generator import generate_scenarios
 from attack_generator import generate_attacks
@@ -13,22 +15,64 @@ from failure_classifier import classify_batch as classify_failures
 from security_classifier import classify_batch as classify_security, calculate_security_score
 import storage
 
+# --- Make the repo-root-level `sandbox` package importable regardless of
+# how this module is launched (e.g. `uvicorn main:app --app-dir src`,
+# which only puts `src` on sys.path by default). ---
+_REPO_ROOT = Path(__file__).resolve().parent.parent
+if str(_REPO_ROOT) not in sys.path:
+    sys.path.insert(0, str(_REPO_ROOT))
+
+from sandbox.sandbox_runner import SandboxRunner, Agent  # noqa: E402
+from sandbox.security_monitor import SecurityMonitor  # noqa: E402
+
 # --- Config for cost savings estimate ---
 MANUAL_MINUTES_PER_SCENARIO = 5  # rough estimate: manual QA time per test case
 HOURLY_RATE_USD = 40  # rough estimate: QA engineer hourly rate
 
+# --- Config for sandbox execution ---
+SANDBOX_MAX_STEPS = 10
+SANDBOX_TIMEOUT_SECONDS = 30
 
-def _run_sandbox(agent_description: str, input_text: str) -> dict:
+
+def _run_sandbox(
+    runner: SandboxRunner,
+    agent: Agent,
+    monitor: SecurityMonitor,
+    input_text: str,
+) -> dict:
     """
-    PLACEHOLDER for Member 2's sandbox integration.
-    Should call the actual agent and return its response + tool traces.
-    Replace this function's body once the real sandbox API/module is ready.
+    Runs a single input against Member 2's Sandbox Runner and returns
+    a normalized result for the rest of the pipeline.
+
+    NOTE: `agent` here is Member 2's local demo Agent (sandbox/sandbox_runner.py),
+    which is a hardcoded travel-booking agent (it parses flight/hotel-style
+    tasks out of the input text via regex) -- it does not dynamically build
+    an agent from `agent_description`. `agent_description` is still used
+    for reporting/labeling, but the sandbox always exercises the same demo
+    agent regardless of what the user described. If a real pluggable-agent
+    interface is added later, only this function needs to change.
     """
+    scenario = {
+        "name": "generated_case",
+        "description": agent.description,
+        "task": input_text,
+    }
+
+    trace = runner.run_scenario(
+        agent,
+        scenario,
+        max_steps=SANDBOX_MAX_STEPS,
+        timeout_seconds=SANDBOX_TIMEOUT_SECONDS,
+    )
+    trace_dict = trace.to_dict()
+
+    security_audit = monitor.audit_trace(trace_dict)
+
     return {
-        "response": f"[STUB RESPONSE] Agent would respond to: '{input_text}'",
-        "traces": [],
-        "safety_issues": [],
-        "timed_out": False,
+        "response": trace_dict["final_output"],
+        "traces": trace_dict["tool_traces"],
+        "safety_issues": security_audit["issues"],
+        "timed_out": trace_dict["failure_detected"] == "timeout",
     }
 
 
@@ -100,6 +144,17 @@ def run_full_test(agent_description: str, tools: list[str], model: str = "llama3
     start_time = datetime.now()
     test_id = str(uuid.uuid4())[:8]
 
+    # Sandbox setup: one runner + one demo agent + one security monitor per
+    # test run, shared across every scenario/attack in this run. Tool state
+    # is reset internally before each scenario by SandboxRunner.run_scenario.
+    sandbox_runner = SandboxRunner(auto_persist=False)
+    sandbox_agent = Agent(
+        name="evaluated_agent",
+        description=agent_description,
+        tools=sandbox_runner.tools,
+    )
+    security_monitor = SecurityMonitor(allowed_tools=tools or None)
+
     # 1. Generate scenarios (returns dict keyed by category: normal/edge/adversarial/pressure)
     scenario_categories = generate_scenarios(agent_description, tools, model=model)
     all_scenarios = [s for scenarios in scenario_categories.values() for s in scenarios]
@@ -110,7 +165,7 @@ def run_full_test(agent_description: str, tools: list[str], model: str = "llama3
     # 3. Run each scenario against the sandbox
     scenario_runs = []
     for s in all_scenarios:
-        sandbox_result = _run_sandbox(agent_description, s["input"])
+        sandbox_result = _run_sandbox(sandbox_runner, sandbox_agent, security_monitor, s["input"])
         scenario_runs.append({
             "scenario_id": s["id"],
             "input": s["input"],
@@ -123,7 +178,7 @@ def run_full_test(agent_description: str, tools: list[str], model: str = "llama3
     # 3b. Run each attack against the sandbox
     attack_runs = []
     for a in attacks:
-        sandbox_result = _run_sandbox(agent_description, a["input"])
+        sandbox_result = _run_sandbox(sandbox_runner, sandbox_agent, security_monitor, a["input"])
         attack_runs.append({
             "attack_id": a["id"],
             "attack_type": a["type"],
